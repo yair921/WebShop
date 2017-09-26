@@ -1,0 +1,43 @@
+﻿@using WebShop.Models
+@model List<tbl_product_categories>
+
+@{
+    ViewBag.Title = "ProductCategoriesAdmin";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div style="margin:10px;">
+    <div class="panel-group">
+        <div class="panel panel-primary">
+            <div class="panel-heading"><strong>Administrar Productos</strong></div>
+            <div class="panel-body">
+                <div class="container" id="divContainer">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Descripción</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model != null)
+                            {
+                                foreach (var item in Model)
+                                {
+                                    <tr>
+                                        <td>@item.description</td>
+                                        <td>
+                                            <button class="btn btn-danger" onclick="productCategoriesAdmin.remove       (@item.id_product_category)">Eliminar</button>
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="~/Content/scripts/productsCategories/productCategoriesAdmin.js"></script>
+

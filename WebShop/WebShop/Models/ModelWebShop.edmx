@@ -1,0 +1,429 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="WebShopModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="sysdiagrams">
+          <Key>
+            <PropertyRef Name="diagram_id" />
+          </Key>
+          <Property Name="name" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="principal_id" Type="int" Nullable="false" />
+          <Property Name="diagram_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="version" Type="int" />
+          <Property Name="definition" Type="varbinary(max)" />
+        </EntityType>
+        <EntityType Name="tbl_customers">
+          <Key>
+            <PropertyRef Name="id_customer" />
+          </Key>
+          <Property Name="id_customer" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="name" Type="varchar" MaxLength="100" />
+          <Property Name="last_updated" Type="datetime" />
+        </EntityType>
+        <EntityType Name="tbl_orders">
+          <Key>
+            <PropertyRef Name="id_order" />
+          </Key>
+          <Property Name="id_order" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="id_customer" Type="int" />
+          <Property Name="enabled" Type="bit" />
+          <Property Name="last_update" Type="datetime" />
+        </EntityType>
+        <EntityType Name="tbl_product_categories">
+          <Key>
+            <PropertyRef Name="id_product_category" />
+          </Key>
+          <Property Name="id_product_category" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="description" Type="varchar" MaxLength="100" />
+          <Property Name="last_update" Type="datetime" />
+        </EntityType>
+        <EntityType Name="tbl_products">
+          <Key>
+            <PropertyRef Name="id_product" />
+          </Key>
+          <Property Name="id_product" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="number" Type="varchar" MaxLength="20" />
+          <Property Name="title" Type="varchar" MaxLength="100" />
+          <Property Name="price" Type="decimal" Precision="18" Scale="4" />
+          <Property Name="last_update" Type="datetime" />
+        </EntityType>
+        <EntityType Name="tbl_relationship_op">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="id_order" Type="int" />
+          <Property Name="id_product" Type="int" />
+          <Property Name="enabled" Type="bit" />
+        </EntityType>
+        <EntityType Name="tbl_relationship_pc">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="id_product" Type="int" />
+          <Property Name="id_product_category" Type="int" />
+          <Property Name="enabled" Type="bit" />
+          <Property Name="last_update" Type="datetime" />
+        </EntityType>
+        <Association Name="FK_tbl_orders_tbl_customers">
+          <End Role="tbl_customers" Type="Self.tbl_customers" Multiplicity="0..1" />
+          <End Role="tbl_orders" Type="Self.tbl_orders" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tbl_customers">
+              <PropertyRef Name="id_customer" />
+            </Principal>
+            <Dependent Role="tbl_orders">
+              <PropertyRef Name="id_customer" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tbl_relationship_op_tbl_orders">
+          <End Role="tbl_orders" Type="Self.tbl_orders" Multiplicity="0..1" />
+          <End Role="tbl_relationship_op" Type="Self.tbl_relationship_op" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tbl_orders">
+              <PropertyRef Name="id_order" />
+            </Principal>
+            <Dependent Role="tbl_relationship_op">
+              <PropertyRef Name="id_order" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tbl_relationship_op_tbl_products">
+          <End Role="tbl_products" Type="Self.tbl_products" Multiplicity="0..1" />
+          <End Role="tbl_relationship_op" Type="Self.tbl_relationship_op" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tbl_products">
+              <PropertyRef Name="id_product" />
+            </Principal>
+            <Dependent Role="tbl_relationship_op">
+              <PropertyRef Name="id_product" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tbl_relationship_pc_tbl_product_categories">
+          <End Role="tbl_product_categories" Type="Self.tbl_product_categories" Multiplicity="0..1" />
+          <End Role="tbl_relationship_pc" Type="Self.tbl_relationship_pc" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tbl_product_categories">
+              <PropertyRef Name="id_product_category" />
+            </Principal>
+            <Dependent Role="tbl_relationship_pc">
+              <PropertyRef Name="id_product_category" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tbl_relationship_pc_tbl_products">
+          <End Role="tbl_products" Type="Self.tbl_products" Multiplicity="0..1" />
+          <End Role="tbl_relationship_pc" Type="Self.tbl_relationship_pc" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tbl_products">
+              <PropertyRef Name="id_product" />
+            </Principal>
+            <Dependent Role="tbl_relationship_pc">
+              <PropertyRef Name="id_product" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="WebShopModelStoreContainer">
+          <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tbl_customers" EntityType="Self.tbl_customers" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tbl_orders" EntityType="Self.tbl_orders" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tbl_product_categories" EntityType="Self.tbl_product_categories" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tbl_products" EntityType="Self.tbl_products" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tbl_relationship_op" EntityType="Self.tbl_relationship_op" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tbl_relationship_pc" EntityType="Self.tbl_relationship_pc" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_tbl_orders_tbl_customers" Association="Self.FK_tbl_orders_tbl_customers">
+            <End Role="tbl_customers" EntitySet="tbl_customers" />
+            <End Role="tbl_orders" EntitySet="tbl_orders" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tbl_relationship_op_tbl_orders" Association="Self.FK_tbl_relationship_op_tbl_orders">
+            <End Role="tbl_orders" EntitySet="tbl_orders" />
+            <End Role="tbl_relationship_op" EntitySet="tbl_relationship_op" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tbl_relationship_op_tbl_products" Association="Self.FK_tbl_relationship_op_tbl_products">
+            <End Role="tbl_products" EntitySet="tbl_products" />
+            <End Role="tbl_relationship_op" EntitySet="tbl_relationship_op" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tbl_relationship_pc_tbl_product_categories" Association="Self.FK_tbl_relationship_pc_tbl_product_categories">
+            <End Role="tbl_product_categories" EntitySet="tbl_product_categories" />
+            <End Role="tbl_relationship_pc" EntitySet="tbl_relationship_pc" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tbl_relationship_pc_tbl_products" Association="Self.FK_tbl_relationship_pc_tbl_products">
+            <End Role="tbl_products" EntitySet="tbl_products" />
+            <End Role="tbl_relationship_pc" EntitySet="tbl_relationship_pc" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="WebShopModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="sysdiagrams">
+          <Key>
+            <PropertyRef Name="diagram_id" />
+          </Key>
+          <Property Name="name" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="principal_id" Type="Int32" Nullable="false" />
+          <Property Name="diagram_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="version" Type="Int32" />
+          <Property Name="definition" Type="Binary" MaxLength="Max" FixedLength="false" />
+        </EntityType>
+        <EntityType Name="tbl_customers">
+          <Key>
+            <PropertyRef Name="id_customer" />
+          </Key>
+          <Property Name="id_customer" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="name" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="last_updated" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="tbl_orders" Relationship="Self.FK_tbl_orders_tbl_customers" FromRole="tbl_customers" ToRole="tbl_orders" />
+        </EntityType>
+        <EntityType Name="tbl_orders">
+          <Key>
+            <PropertyRef Name="id_order" />
+          </Key>
+          <Property Name="id_order" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="id_customer" Type="Int32" />
+          <Property Name="enabled" Type="Boolean" />
+          <Property Name="last_update" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="tbl_customers" Relationship="Self.FK_tbl_orders_tbl_customers" FromRole="tbl_orders" ToRole="tbl_customers" />
+          <NavigationProperty Name="tbl_relationship_op" Relationship="Self.FK_tbl_relationship_op_tbl_orders" FromRole="tbl_orders" ToRole="tbl_relationship_op" />
+        </EntityType>
+        <EntityType Name="tbl_product_categories">
+          <Key>
+            <PropertyRef Name="id_product_category" />
+          </Key>
+          <Property Name="id_product_category" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="description" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="last_update" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="tbl_relationship_pc" Relationship="Self.FK_tbl_relationship_pc_tbl_product_categories" FromRole="tbl_product_categories" ToRole="tbl_relationship_pc" />
+        </EntityType>
+        <EntityType Name="tbl_products">
+          <Key>
+            <PropertyRef Name="id_product" />
+          </Key>
+          <Property Name="id_product" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="number" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="title" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="price" Type="Decimal" Precision="18" Scale="4" />
+          <Property Name="last_update" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="tbl_relationship_op" Relationship="Self.FK_tbl_relationship_op_tbl_products" FromRole="tbl_products" ToRole="tbl_relationship_op" />
+          <NavigationProperty Name="tbl_relationship_pc" Relationship="Self.FK_tbl_relationship_pc_tbl_products" FromRole="tbl_products" ToRole="tbl_relationship_pc" />
+        </EntityType>
+        <EntityType Name="tbl_relationship_op">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="id_order" Type="Int32" />
+          <Property Name="id_product" Type="Int32" />
+          <Property Name="enabled" Type="Boolean" />
+          <NavigationProperty Name="tbl_orders" Relationship="Self.FK_tbl_relationship_op_tbl_orders" FromRole="tbl_relationship_op" ToRole="tbl_orders" />
+          <NavigationProperty Name="tbl_products" Relationship="Self.FK_tbl_relationship_op_tbl_products" FromRole="tbl_relationship_op" ToRole="tbl_products" />
+        </EntityType>
+        <EntityType Name="tbl_relationship_pc">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="id_product" Type="Int32" />
+          <Property Name="id_product_category" Type="Int32" />
+          <Property Name="enabled" Type="Boolean" />
+          <Property Name="last_update" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="tbl_product_categories" Relationship="Self.FK_tbl_relationship_pc_tbl_product_categories" FromRole="tbl_relationship_pc" ToRole="tbl_product_categories" />
+          <NavigationProperty Name="tbl_products" Relationship="Self.FK_tbl_relationship_pc_tbl_products" FromRole="tbl_relationship_pc" ToRole="tbl_products" />
+        </EntityType>
+        <Association Name="FK_tbl_orders_tbl_customers">
+          <End Role="tbl_customers" Type="Self.tbl_customers" Multiplicity="0..1" />
+          <End Role="tbl_orders" Type="Self.tbl_orders" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tbl_customers">
+              <PropertyRef Name="id_customer" />
+            </Principal>
+            <Dependent Role="tbl_orders">
+              <PropertyRef Name="id_customer" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tbl_relationship_op_tbl_orders">
+          <End Role="tbl_orders" Type="Self.tbl_orders" Multiplicity="0..1" />
+          <End Role="tbl_relationship_op" Type="Self.tbl_relationship_op" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tbl_orders">
+              <PropertyRef Name="id_order" />
+            </Principal>
+            <Dependent Role="tbl_relationship_op">
+              <PropertyRef Name="id_order" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tbl_relationship_pc_tbl_product_categories">
+          <End Role="tbl_product_categories" Type="Self.tbl_product_categories" Multiplicity="0..1" />
+          <End Role="tbl_relationship_pc" Type="Self.tbl_relationship_pc" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tbl_product_categories">
+              <PropertyRef Name="id_product_category" />
+            </Principal>
+            <Dependent Role="tbl_relationship_pc">
+              <PropertyRef Name="id_product_category" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tbl_relationship_op_tbl_products">
+          <End Role="tbl_products" Type="Self.tbl_products" Multiplicity="0..1" />
+          <End Role="tbl_relationship_op" Type="Self.tbl_relationship_op" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tbl_products">
+              <PropertyRef Name="id_product" />
+            </Principal>
+            <Dependent Role="tbl_relationship_op">
+              <PropertyRef Name="id_product" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tbl_relationship_pc_tbl_products">
+          <End Role="tbl_products" Type="Self.tbl_products" Multiplicity="0..1" />
+          <End Role="tbl_relationship_pc" Type="Self.tbl_relationship_pc" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tbl_products">
+              <PropertyRef Name="id_product" />
+            </Principal>
+            <Dependent Role="tbl_relationship_pc">
+              <PropertyRef Name="id_product" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="WebShopEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" />
+          <EntitySet Name="tbl_customers" EntityType="Self.tbl_customers" />
+          <EntitySet Name="tbl_orders" EntityType="Self.tbl_orders" />
+          <EntitySet Name="tbl_product_categories" EntityType="Self.tbl_product_categories" />
+          <EntitySet Name="tbl_products" EntityType="Self.tbl_products" />
+          <EntitySet Name="tbl_relationship_op" EntityType="Self.tbl_relationship_op" />
+          <EntitySet Name="tbl_relationship_pc" EntityType="Self.tbl_relationship_pc" />
+          <AssociationSet Name="FK_tbl_orders_tbl_customers" Association="Self.FK_tbl_orders_tbl_customers">
+            <End Role="tbl_customers" EntitySet="tbl_customers" />
+            <End Role="tbl_orders" EntitySet="tbl_orders" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tbl_relationship_op_tbl_orders" Association="Self.FK_tbl_relationship_op_tbl_orders">
+            <End Role="tbl_orders" EntitySet="tbl_orders" />
+            <End Role="tbl_relationship_op" EntitySet="tbl_relationship_op" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tbl_relationship_pc_tbl_product_categories" Association="Self.FK_tbl_relationship_pc_tbl_product_categories">
+            <End Role="tbl_product_categories" EntitySet="tbl_product_categories" />
+            <End Role="tbl_relationship_pc" EntitySet="tbl_relationship_pc" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tbl_relationship_op_tbl_products" Association="Self.FK_tbl_relationship_op_tbl_products">
+            <End Role="tbl_products" EntitySet="tbl_products" />
+            <End Role="tbl_relationship_op" EntitySet="tbl_relationship_op" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tbl_relationship_pc_tbl_products" Association="Self.FK_tbl_relationship_pc_tbl_products">
+            <End Role="tbl_products" EntitySet="tbl_products" />
+            <End Role="tbl_relationship_pc" EntitySet="tbl_relationship_pc" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="WebShopModelStoreContainer" CdmEntityContainer="WebShopEntities">
+          <EntitySetMapping Name="sysdiagrams">
+            <EntityTypeMapping TypeName="WebShopModel.sysdiagrams">
+              <MappingFragment StoreEntitySet="sysdiagrams">
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="principal_id" ColumnName="principal_id" />
+                <ScalarProperty Name="diagram_id" ColumnName="diagram_id" />
+                <ScalarProperty Name="version" ColumnName="version" />
+                <ScalarProperty Name="definition" ColumnName="definition" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tbl_customers">
+            <EntityTypeMapping TypeName="WebShopModel.tbl_customers">
+              <MappingFragment StoreEntitySet="tbl_customers">
+                <ScalarProperty Name="id_customer" ColumnName="id_customer" />
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="last_updated" ColumnName="last_updated" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tbl_orders">
+            <EntityTypeMapping TypeName="WebShopModel.tbl_orders">
+              <MappingFragment StoreEntitySet="tbl_orders">
+                <ScalarProperty Name="id_order" ColumnName="id_order" />
+                <ScalarProperty Name="id_customer" ColumnName="id_customer" />
+                <ScalarProperty Name="enabled" ColumnName="enabled" />
+                <ScalarProperty Name="last_update" ColumnName="last_update" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tbl_product_categories">
+            <EntityTypeMapping TypeName="WebShopModel.tbl_product_categories">
+              <MappingFragment StoreEntitySet="tbl_product_categories">
+                <ScalarProperty Name="id_product_category" ColumnName="id_product_category" />
+                <ScalarProperty Name="description" ColumnName="description" />
+                <ScalarProperty Name="last_update" ColumnName="last_update" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tbl_products">
+            <EntityTypeMapping TypeName="WebShopModel.tbl_products">
+              <MappingFragment StoreEntitySet="tbl_products">
+                <ScalarProperty Name="id_product" ColumnName="id_product" />
+                <ScalarProperty Name="number" ColumnName="number" />
+                <ScalarProperty Name="title" ColumnName="title" />
+                <ScalarProperty Name="price" ColumnName="price" />
+                <ScalarProperty Name="last_update" ColumnName="last_update" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tbl_relationship_op">
+            <EntityTypeMapping TypeName="WebShopModel.tbl_relationship_op">
+              <MappingFragment StoreEntitySet="tbl_relationship_op">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="id_order" ColumnName="id_order" />
+                <ScalarProperty Name="id_product" ColumnName="id_product" />
+                <ScalarProperty Name="enabled" ColumnName="enabled" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tbl_relationship_pc">
+            <EntityTypeMapping TypeName="WebShopModel.tbl_relationship_pc">
+              <MappingFragment StoreEntitySet="tbl_relationship_pc">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="id_product" ColumnName="id_product" />
+                <ScalarProperty Name="id_product_category" ColumnName="id_product_category" />
+                <ScalarProperty Name="enabled" ColumnName="enabled" />
+                <ScalarProperty Name="last_update" ColumnName="last_update" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

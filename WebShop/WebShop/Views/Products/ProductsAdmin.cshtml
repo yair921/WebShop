@@ -1,0 +1,64 @@
+﻿@using WebShop.Models
+@model List<tbl_products>
+@{
+    ViewBag.Title = "ProductsAdmin";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div style="margin:10px;">
+    <div class="panel-group">
+        <div class="panel panel-primary">
+            <div class="panel-heading"><strong>Administrar Productos</strong></div>
+            <div class="panel-body">
+                <div class="container" id="divContainer">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Número</th>
+                                <th>Título</th>
+                                <th>Precio</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model != null)
+                            {
+                                foreach (var item in Model)
+                                {
+                                    <tr>
+                                        <td>@item.number</td>
+                                        <td>@item.title</td>
+                                        <td>@item.price</td>
+                                        <td>
+                                            <button class="btn btn-danger" onclick="productsAdmin.remove(@item.id_product)">Eliminar</button>
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@*Modal*@
+<div class="modal fade" id="modalMessage" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title" id="modalMessageTitle"></h4>
+            </div>
+            <div class="modal-body">
+                <p id="modalMessageContent"></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="~/Content/scripts/products/productsAdmin.js"></script>
+

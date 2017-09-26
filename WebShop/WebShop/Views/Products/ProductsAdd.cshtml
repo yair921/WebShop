@@ -1,0 +1,64 @@
+﻿@using WebShop.Models
+@model List<tbl_product_categories>
+
+@{
+    ViewBag.Title = "ProductsAdd";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div style="margin:10px;">
+    <div class="panel-group">
+        <div class="panel panel-primary">
+            <div class="panel-heading"><strong>Agregar Producto</strong></div>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-xs-6">
+                        <label for="txt_title">Número</label>
+                        <input type="text" id="txt_number" name="Número del Producto" class="form-control" required />
+                    </div>
+                    <div class="col-xs-6">
+                        <label for="txt_title">Título</label>
+                        <input type="text" id="txt_title" name="Título del Producto" class="form-control" required />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-6">
+                        <label for="txt_title">Precio</label>
+                        <input type="text" id="txt_price" name="Precio del Producto" class="form-control" required />
+                    </div>
+                    <div class="col-xs-6">
+                        <label for="ddl_product_categories">Seleccione Categorías</label>
+                        <select multiple id="ddl_product_categories" class="form-control" name="Categoría" required>
+                            @foreach (var item in Model)
+                            {
+                                <option value="@item.id_product_category">@item.description</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div style="text-align:right; margin:10px;">
+                    <button id="btn_save" class="btn btn-primary">Agregar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@*Modal*@
+<div class="modal fade" id="modalMessage" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title" id="modalMessageTitle"></h4>
+            </div>
+            <div class="modal-body">
+                <p id="modalMessageContent"></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="~/Content/scripts/products/productsAdd.js"></script>
+
